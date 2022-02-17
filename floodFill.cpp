@@ -4,18 +4,18 @@
  
 using namespace std;
  
-void boundaryFill(int x,int y,int f_color,int b_color){
-	if(getpixel(x,y)!=b_color && getpixel(x,y)!=f_color){
-		putpixel(x,y,f_color);
-		delay(300);
-		boundaryFill(x+1,y,f_color,b_color);
-		boundaryFill(x,y+1,f_color,b_color);
-		boundaryFill(x-1,y,f_color,b_color);
-		boundaryFill(x,y-1,f_color,b_color);
-		boundaryFill(x+1,y+1,f_color,b_color);
-		boundaryFill(x-1,y-1,f_color,b_color);
-		boundaryFill(x-1,y+1,f_color,b_color);
-		boundaryFill(x+1,y-1,f_color,b_color);
+void floodFill(int x,int y,int oldcolor,int newcolor){
+	if(getpixel(x,y) == oldcolor){
+		delay(500);
+		putpixel(x,y,newcolor);
+		floodFill(x+1,y,oldcolor,newcolor);
+		floodFill(x,y+1,oldcolor,newcolor);
+		floodFill(x-1,y,oldcolor,newcolor);
+		floodFill(x,y-1,oldcolor,newcolor);
+		floodFill(x+1,y+1,oldcolor,newcolor);
+		floodFill(x-1,y+1,oldcolor,newcolor);
+		floodFill(x-1,y-1,oldcolor,newcolor);
+		floodFill(x+1,y-1,oldcolor,newcolor);
 	}
 }
  
@@ -48,7 +48,7 @@ int main(){
 		line(arr[i][0],arr[i][1],arr[i+1][0],arr[i+1][1]);
 	}
 	line(arr[i][0],arr[i][1],arr[0][0],arr[0][1]);
-	boundaryFill((xmin+xmax)/2,(ymin+ymax)/2,4,15);
+	floodFill((xmin+xmax)/2,(ymin+ymax)/2,0,15);
 	getch();
 	return 0;
 }

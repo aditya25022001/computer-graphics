@@ -26,8 +26,8 @@ void drawCircle(int r){
 	int driver=DETECT, mode, x=0, y=r,d;
 	initgraph(&driver,&mode,(char*)"");
 	putpixel(shiftX(x),shiftY(y),RED);
-	d=1-x;
 	x++;
+	d=1-r;
 	while(x<=y){
 		if(d<0){
 			putpixels(x,y);
