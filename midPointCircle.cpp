@@ -3,39 +3,40 @@
 
 using namespace std;
 
-int shiftX(int x){
-	return x+100;
+int width, height;
+
+void shift(int x, int y){
+	putpixel(width+x, height-y, WHITE);
 }
 
-int shiftY(int y){
-	return y+100;
+void putpixels(int x, int y, int xc, int yc){
+	shift(x+xc,y+yc);
+	shift(x+xc,-y+yc);
+	shift(-x+xc,y+yc);
+	shift(-x+xc,-y+yc);
+	shift(y+xc,x+yc);
+	shift(-y+xc,x+yc);
+	shift(y+xc,-x+yc);
+	shift(-y+xc,-x+yc);
 }
 
-void putpixels(int x, int y){
-	putpixel(shiftX(x),shiftY(y),RED);
-	putpixel(shiftX(x),shiftY(-y),RED);
-	putpixel(shiftX(-x),shiftY(y),RED);
-	putpixel(shiftX(-x),shiftY(-y),RED);
-	putpixel(shiftY(y),shiftX(x),RED);
-	putpixel(shiftY(y),shiftX(-x),RED);
-	putpixel(shiftY(-y),shiftX(x),RED);
-	putpixel(shiftY(-y),shiftX(-x),RED);
-}
-
-void drawCircle(int r){
+void drawCircle(int r, int xc, int yc){
 	int driver=DETECT, mode, x=0, y=r,d;
 	initgraph(&driver,&mode,(char*)"");
-	putpixel(shiftX(x),shiftY(y),RED);
+	width = getwindowwidth()/2, height=getwindowheight()/2;
+	line(width,0,width,height*2);
+	line(0,height,width*2,height);
+	putpixels(x,y,xc,yc);
 	x++;
 	d=1-r;
 	while(x<=y){
 		if(d<0){
-			putpixels(x,y);
+			putpixels(x,y,xc,yc);
 			d+=2*x+1;
 		}
 		else{
 			y--;
-			putpixels(x,y);
+			putpixels(x,y,xc,yc);
 			d+=2*(x-y)+1;
 		}
 		x++;
@@ -44,9 +45,11 @@ void drawCircle(int r){
 }
 
 int main(){
-	int radius;
+	int radius, xc, yc;
 	cout<<"Enter radius : ";
 	cin>>radius;
-	drawCircle(radius);
+	cout<<endl<<"Enter center coordinates : ";
+	cin>>xc>>yc;
+	drawCircle(radius, xc, yc);
 	return 0;
 }
