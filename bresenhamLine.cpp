@@ -7,6 +7,7 @@ using namespace std;
 int width, height;
 
 void shift(int x, int y){
+	cout<<x<<" "<<y<<" "<<endl;
 	putpixel(width+x, height-y, WHITE);
 }
 

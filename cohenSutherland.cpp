@@ -1,73 +1,81 @@
-#include<iostream>
 #include<conio.h>
+#include<iostream>
 #include<graphics.h>
-#include<math.h>
 
 using namespace std;
 
-void Window(){
-	line (200,200,350,200);
-	line(350,200,350,350);
-	line(200,200,200,350);
-	line(200,350,350,350);
+static int LEFT=1,RIGHT=2,BOTTOM=4,TOP=8,xl,yl,xh,yh;
+
+int getcode(int x,int y){
+	int code = 0;
+	if(y > yh) code |=TOP;
+	if(y < yl) code |=BOTTOM;
+	if(x < xl) code |=LEFT;
+	if(x > xh) code |=RIGHT;
+	return code;
 }
 
-void Code(char c[4],float x,float y){
-    c[0]=(x<200)?'1':'0';
-	c[1]=(x>350)?'1':'0';
-	c[2]=(y<200)?'1':'0';
-	c[3]=(y>350)?'1':'0';
-}
-void Clipping  (char c[],char d[],float &x,float &y,float m){
-	int flag=1,i=0;
-	for (i=0;i<4;i++){
-		if(c[i]!='0' && d[i]!='0'){
-			flag=0;
-			break;
-		}
-		if(flag){
-			if(c[0]!='0'){
-				y=m*(200-x)+y;
-				x=200;
-			}
-			else if(c[1]!='0'){
-				y=m*(350-x)+y;
-				x=350;
-			}
-			else if(c[2]!='0'){
-				x=((200-y)/m)+x;
-				y=200;
-			}
-			else if(c[3]!='0'){
-				x=((350-y)/m)+x;
-				y=350;
-			}
-		}
-		if (flag==0)
-			cout<<"Line lying outside";
-	}
-}
 int main(){
-	int gdriver = DETECT, gmode, errorcode;
-	float x1,y1,x2,y2;
-	float m;
-	char c[4],d[4];
-	initgraph(&gdriver, &gmode, (char*)"");
-	cout<<"Enter coordinates";
+	int gdriver = DETECT,gmode;
+	initgraph(&gdriver,&gmode,(char*)"");
+	cout<<"Enter bottom left and top right co-ordinates of window: ";
+	cin>>xl>>yl>>xh>>yh;
+	outtextxy(300,300,(char*)"The clipping window");
+	rectangle(xl,yl,xh,yh);
+	int x1,y1,x2,y2;
+	cout<<"Enter the endpoints of the line: ";
 	cin>>x1>>y1>>x2>>y2;
-	cout<<"Before clipping";
-	Window();
+	outtextxy(300,325,(char*)"Before clipping");
 	line(x1,y1,x2,y2);
 	getch();
+	int outcode1=getcode(x1,y1), outcode2=getcode(x2,y2);
+	int accept = 0;
+	while(1){
+		float m =(float)(y2-y1)/(x2-x1);
+		if(outcode1==0 && outcode2==0){ 
+			accept = 1;
+			break;
+		}
+		else if((outcode1 & outcode2)!=0){
+			break;
+		}else{
+			int x,y;
+			int temp;
+			if(outcode1==0) 
+				temp = outcode2;
+			else 
+				temp = outcode1;
+			if(temp & TOP){
+				x = x1+ (yh-y1)/m;
+				y = yh;
+			}
+			else if(temp & BOTTOM){
+				x = x1+ (yl-y1)/m;
+				y = yl;
+			}else if(temp & LEFT){
+				x = xl;
+				y = y1+ m*(xl-x1);
+			}else if(temp & RIGHT){
+				x = xh;
+				y = y1+ m*(xh-x1);
+			}
+			if(temp == outcode1){ 
+				x1 = x;
+				y1 = y;
+				outcode1 = getcode(x1,y1);
+			}else{
+				x2 = x;
+				y2 = y;
+				outcode2 = getcode(x2,y2);
+			}
+		}
+	}
+	setcolor(WHITE);
 	cleardevice();
-	m=float((y2-y1)/(x2-x1));
-	Code(c,x1,y1);
-	Code(d,x2,y2) ;
-	Clipping(c,d,x1,y1,m);
-	Clipping(d,c,x2,y2,m);
-	cout<<"After Clipping";
-	Window();
-	line(x1,y1,x2,y2);
+	rectangle(xl,yl,xh,yh);
+	outtextxy(300,300,(char*)"After clipping");
+	if(accept)
+		line(x1,y1,x2,y2);
 	getch();
 	closegraph();
 	return 0;

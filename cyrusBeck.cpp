@@ -64,7 +64,7 @@ void clip(_line a){
  	line(319+ROUND(a.x1),240-ROUND(a.y1),319+ROUND(a.x2),240-ROUND(a.y2)); 
 } 
   
-void drawWindow(int xmin,int ymin,int xmax,int ymax){ 
+void drawWindow(){ 
  	line(319+xmin,240-ymax,319+xmax,240-ymax);// Top Edge 
  	line(319+xmax,240-ymax,319+xmax,240-ymin);// Right Edge 
  	line(319+xmax,240-ymin,319+xmin,240-ymin);// Bottom Edge 
@@ -72,8 +72,7 @@ void drawWindow(int xmin,int ymin,int xmax,int ymax){
 } 
   
 int main(){ 
- 	int driver=DETECT,mode,n,i; 
- 	_line *a; 
+ 	int driver=DETECT,mode,i; 
   	cout<<"Enter the window coordinates : \n"; 
  	cout<<"Lower Left Corner : "; 
  	cin>>xmin>>ymin; 
@@ -83,37 +82,39 @@ int main(){
  		cout<<"\nIncorrect Window"; 
  		getch(); 
  		exit(0); 
- 	} 
-	cout<<"How many lines do you want to draw : "; 
- 	cin>>n; 
- 	a=new _line[n]; 
+ 	}  
+ 	_line a;
  	cout<<"Enter Coordinates : \n"; 
- 	for(i=0;i<n;i++){ 
-	 	cout<<"line "<<i+1<<" : "; 
-	 	cout<<"Enter coordinates of Ist Vertex"<<endl; 
-	 	cout<<"x1 ="; 
-	 	cin>>a[i].x1; 
-	 	cout<<"y1 ="; 
-	 	cin>>a[i].y1;  
-	 	cout<<"Enter coordinates of IInd Vertex"<<endl; 
- 		cout<<"x2 ="; cin>>a[i].x2; 
- 		cout<<"y2 ="; cin>>a[i].y2; 
- 	} 
+	cout<<"Enter coordinates (x1, y1) : "<<endl;
+	cout<<"x1 : ";
+	cin>>a.x1;
+	cout<<"y1 : ";
+	cin>>a.y1; 	
+	cout<<endl;
+	cout<<"Enter coordinates (x2, y2) : "<<endl;
+	cout<<"x2 : ";
+	cin>>a.x2;
+	cout<<"y2 : ";
+	cin>>a.y2;
 	initgraph(&driver,&mode,(char*)""); 
- 	outtextxy(0,5,"The original Line is");  
- 	for (i=0;i<n;i++) 
- 		line(319+a[i].x1,240-a[i].y1,319+a[i].x2,240-a[i].y2); 
+	line(319,0,319,480);
+	line(0,240,638,240);
+	outtextxy(0,5,(char*)"The original Line is");  
+ 	line(319+a.x1,240-a.y1,319+a.x2,240-a.y2); 
  	getch(); 
  	setcolor(LIGHTGREEN); 
- 	outtextxy(0,20,"The Clipping Window is"); 
- 	drawWindow(xmin,ymin,xmax,ymax); 
+ 	outtextxy(0,20,(char*)"The Clipping Window is"); 
+ 	drawWindow(); 
  	getch(); 
  	cleardevice(); 
- 	drawWindow(xmin,ymin,xmax,ymax); 
+ 	setcolor(WHITE);
+ 	line(319,0,319,480);
+	line(0,240,638,240);
+ 	setcolor(LIGHTGREEN); 
+ 	drawWindow(); 
  	setcolor(WHITE); 
- 	outtextxy(0,5,"The Clipped line is"); 
- 	for(i=0;i<n;i++) 
- 		clip(a[i]); 
+ 	outtextxy(0,5,(char*)"The Clipped line is"); 
+ 	clip(a);  
  	getch(); 
  	closegraph(); 
  	restorecrtmode(); 

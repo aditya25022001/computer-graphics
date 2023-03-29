@@ -31,11 +31,13 @@ void drawCircle(int r, int xc, int yc){
 	d=3-2*r;
 	while(x<=y){
 		if(d<0){
+			cout<<x<<" "<<y<<" "<<endl;
 			putpixels(x,y, xc, yc);
 			d+=4*x+6;
 		}
 		else{
 			y--;
+			cout<<x<<" "<<y<<" "<<endl;
 			putpixels(x,y, xc, yc);
 			d+=4*(x-y)+10;
 		}
